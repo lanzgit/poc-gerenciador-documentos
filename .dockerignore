@@ -1,0 +1,8 @@
+target/
+.git/
+.github/
+.gitignore
+*.md
+*.cmd
+mvnw.cmd
+src/test/
