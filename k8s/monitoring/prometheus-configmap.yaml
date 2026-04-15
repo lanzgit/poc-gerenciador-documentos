@@ -1,0 +1,26 @@
+# ── ConfigMap com a configuração de scrape do Prometheus ─────────────────────
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: gerenciador
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    scrape_configs:
+      # Métricas da própria aplicação Spring Boot via /actuator/prometheus
+      - job_name: 'gerenciador-documentos'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['gerenciador-documentos-service:80']
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: instance
+
+      # Auto-monitoramento do próprio Prometheus
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
