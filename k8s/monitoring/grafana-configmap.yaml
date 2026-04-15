@@ -1,0 +1,35 @@
+# ConfigMap com provisionamento do Prometheus ─────────
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: gerenciador
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-service:9090
+        access: proxy
+        isDefault: true
+        jsonData:
+          timeInterval: "15s"
+---
+# ConfigMap com dashboard pré-provisionado ──────────────────────────────────
+# Instrução 3c: dashboard com métricas de memória, CPU, HTTP, JVM
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards-provision
+  namespace: gerenciador
+data:
+  dashboards.yaml: |
+    apiVersion: 1
+    providers:
+      - name: 'default'
+        orgId: 1
+        folder: 'Gerenciador Documentos'
+        type: file
+        options:
+          path: /var/lib/grafana/dashboards

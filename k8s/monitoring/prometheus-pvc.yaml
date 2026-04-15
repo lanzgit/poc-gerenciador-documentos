@@ -1,0 +1,13 @@
+# PVC para dados persistentes do Prometheus ─────────────────────────────────
+# Instrução 3b: dados do Prometheus gravados de forma persistente
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-pvc
+  namespace: gerenciador
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

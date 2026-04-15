@@ -1,0 +1,58 @@
+# ── PostgreSQL Pod ────────────────────────────────────────────────────────────
+# Instrução 2c: banco em Pod (não Deployment), acessível via ClusterIP
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+  namespace: gerenciador
+  labels:
+    app: postgres
+spec:
+  containers:
+    - name: postgres
+      image: postgres:16-alpine
+      ports:
+        - containerPort: 5432
+      env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+      resources:
+        requests:
+          memory: "256Mi"
+          cpu: "250m"
+        limits:
+          memory: "512Mi"
+          cpu: "500m"
+      readinessProbe:
+        exec:
+          command: ["pg_isready", "-U", "gerenciador", "-d", "gerenciador_db"]
+        initialDelaySeconds: 10
+        periodSeconds: 5
+---
+# ── ClusterIP Service ────────────────────────────────────────────────────────
+# Instrução 2c: acessível apenas dentro do cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: gerenciador
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432

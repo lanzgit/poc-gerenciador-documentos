@@ -1,0 +1,9 @@
+# ConfigMap com a URL do datasource para a aplicação
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: gerenciador
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:5432/gerenciador_db"
