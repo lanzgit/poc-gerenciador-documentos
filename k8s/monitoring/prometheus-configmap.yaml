@@ -1,5 +1,4 @@
-# ── ConfigMap com a configuração de scrape do Prometheus ─────────────────────
-apiVersion: v1
+# ConfigMap com a configuração de scrape do Prometheus
 kind: ConfigMap
 metadata:
   name: prometheus-config
